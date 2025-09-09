@@ -13,8 +13,8 @@ import { login, selectAuth } from '@/store/slices/authSlice';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { toast } from 'sonner';
 
-import AuthModulePattern from '@/assets/AuthModulePattern.png';
-import AuthForm from '@/assets/AuthForm.png';
+import AuthModulePattern from '@/app/assets/AuthModulePattern.png';
+import AuthForm from '@/app/assets/AuthForm.png';
 
 const loginSchema = z.object({
     email: z

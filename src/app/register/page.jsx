@@ -11,11 +11,11 @@ import { useForm } from 'react-hook-form';
 import { useDispatch } from 'react-redux';
 import * as z from 'zod';
 
-import AuthForm from '@/assets/AuthForm.png';
-import AuthModulePattern from '@/assets/AuthModulePattern.png';
-import PersonIcon from '@/assets/svg/Person.svg';
-import LockIcon from '@/assets/svg/icon-lock.svg';
-import MailIcon from '@/assets/svg/icon-mail.svg';
+import AuthForm from '@/app/assets/AuthForm.png';
+import AuthModulePattern from '@/app/assets/AuthModulePattern.png';
+import PersonIcon from '@/app/assets/svg/Person.svg';
+import LockIcon from '@/app/assets/svg/icon-lock.svg';
+import MailIcon from '@/app/assets/svg/icon-mail.svg';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList } from '@/components/ui/tabs';
 

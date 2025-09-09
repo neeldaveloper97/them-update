@@ -5,8 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { authService } from '@/services/authService';
-
-import IllustrationImg from '@/assets/forgot-password-illustration.png';
+import IllustrationImg from '@/app/assets/forgot-password-illustration.png';
 
 function ResetPasswordForm() {
     const [newPassword, setNewPassword] = useState('');

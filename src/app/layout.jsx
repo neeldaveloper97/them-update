@@ -1,8 +1,11 @@
- import { Geist, Geist_Mono, Sora } from "next/font/google";
-import "./globals.css";
+'use client';
 
-// import ReduxProvider from "@/components/ReduxProvider";
- 
+import { Geist, Geist_Mono, Sora } from "next/font/google";
+import "./globals.css";
+import { usePathname } from 'next/navigation';
+
+import ReduxProvider from "@/components/ReduxProvider";
+
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import PublicHeader from '@/components/Header/PublicHeader/PublicHeader.jsx';
@@ -23,54 +26,47 @@ const sora = Sora({
   subsets: ["latin"],
 });
 
-export const metadata = {
-  title: "T.H.E.M",
-  description:
-    "T.H.E.M. is a leading provider of AI-driven solutions, specializing in chatbot development and customer engagement.",
-  icons: {
-    icon: [
-      { url: "/them_logo.svg", type: "image/png" },
-      { url: "/them_logo.svg", rel: "icon", sizes: "any" },
-    ],
-  },
-};
-
 export default function RootLayout({ children }) {
+  const pathname = usePathname();
+
+  // Check if current path is login, register or forgot-password
+  const isAuthPage = ['/login', '/register', '/forgot-password', '/reset-password'].includes(pathname);
+
   return (
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${sora.variable} antialiased bg-white text-gray-900 min-h-screen`}
       >
-        {/* <ReduxProvider> */}
-        {/* Skip link for a11y */}
-        <a
-          href="#main"
-          className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:bg-black focus:text-white focus:px-3 focus:py-2 focus:rounded"
-        >
-          Skip to content
-        </a>
+        <ReduxProvider>
+          {/* Skip link for a11y */}
+          <a
+            href="#main"
+            className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:bg-black focus:text-white focus:px-3 focus:py-2 focus:rounded"
+          >
+            Skip to content
+          </a>
 
-        {/* Client header */}
-        <PublicHeader />
+          {/* Client header */}
+          {!isAuthPage && <PublicHeader />}
 
-        {/* Main content */}
-        <main id="main">{children}</main>
+          {/* Main content */}
+          <main id="main">{children}</main>
 
-        {/* Client footer */}
-        <PublicFooter />
+          {/* Client footer */}
+          {!isAuthPage && <PublicFooter />}
 
-        {/* Toasts */}
-        <ToastContainer
-          position="top-right"
-          autoClose={3000}
-          closeOnClick
-          draggable
-          pauseOnHover
-          pauseOnFocusLoss={false}
-          closeButton
-          theme="light"
-        />
-        {/* </ReduxProvider> */}
+          {/* Toasts */}
+          <ToastContainer
+            position="top-right"
+            autoClose={3000}
+            closeOnClick
+            draggable
+            pauseOnHover
+            pauseOnFocusLoss={false}
+            closeButton
+            theme="light"
+          />
+        </ReduxProvider>
       </body>
     </html>
   );

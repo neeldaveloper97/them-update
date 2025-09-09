@@ -10,7 +10,7 @@ import * as z from 'zod';
 import { Eye, EyeOff } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
-import AuthForm from '@/assets/AuthForm.png';
+import AuthForm from '@/app/assets/AuthForm.png';
 import {
     InputOTP,
     InputOTPGroup,
