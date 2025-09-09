@@ -43,7 +43,6 @@ export default function LoginPage() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const dispatch = useDispatch();
-
     const [sessionId, setSessionId] = useState(null);
     const [showPassword, setShowPassword] = useState(false);
     const [isLoading, setIsLoading] = useState(false);

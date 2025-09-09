@@ -1,6 +1,5 @@
 import { authService } from '@/services/authService';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { de } from 'zod/v4/locales';
 
 export const register = createAsyncThunk(
   'auth/register',
@@ -42,19 +41,24 @@ export const login = createAsyncThunk(
         return rejectWithValue(response);
       }
       if (response.data.session?.access_token) {
-        sessionStorage.setItem(
-          'access_token',
-          response.data.session.access_token
-        );
-        sessionStorage.setItem('chatUserId', response?.data.user.id);
-        sessionStorage.setItem('sessionId', response.data.sessionId);
-        sessionStorage.setItem('agent', response?.data.user.agent);
-        sessionStorage.setItem(
-          'isExistingUser',
-          response.data.isFirstMessageHandled
-        );
+        debugger
+        const userRole = response.data.user.role || USER_ROLES.USER;
+        const permissions = response.data.user.permissions || [];
+        
+        Object.entries({
+          [SESSION_KEYS.ACCESS_TOKEN]: response.data.session.access_token,
+          [SESSION_KEYS.CHAT_USER_ID]: response.data.user.id,
+          [SESSION_KEYS.SESSION_ID]: response.data.sessionId,
+          [SESSION_KEYS.AGENT]: response.data.user.agent,
+          [SESSION_KEYS.IS_EXISTING_USER]: response.data.isFirstMessageHandled,
+          [SESSION_KEYS.USER_ROLE]: userRole,
+          [SESSION_KEYS.PERMISSIONS]: JSON.stringify(permissions)
+        }).forEach(([key, value]) => {
+          if (value != null) {
+            sessionStorage.setItem(key, value);
+          }
+        });
       }
-
       return response.data;
     } catch (error) {
       return rejectWithValue(
@@ -165,12 +169,19 @@ export const changePassword = createAsyncThunk(
   }
 );
 
+const clearStorageData = () => {
+  Object.values(SESSION_KEYS).forEach(key => {
+    sessionStorage.removeItem(key);
+  });
+  localStorage.clear();
+};
+
 export const logoutUser = createAsyncThunk(
   'auth/logoutUser',
   async (_, { rejectWithValue }) => {
     try {
-      const userId = sessionStorage.getItem('chatUserId');
-      const sessionId = sessionStorage.getItem('sessionId');
+      const userId = sessionStorage.getItem(SESSION_KEYS.CHAT_USER_ID);
+      const sessionId = sessionStorage.getItem(SESSION_KEYS.SESSION_ID);
 
       if (!userId || !sessionId) {
         return rejectWithValue('Missing session or user ID');
@@ -182,8 +193,7 @@ export const logoutUser = createAsyncThunk(
         return rejectWithValue(response?.message || 'Logout failed');
       }
 
-      sessionStorage.clear();
-      localStorage.clear();
+      clearStorageData();
       return response;
     } catch (error) {
       return rejectWithValue(
@@ -193,25 +203,60 @@ export const logoutUser = createAsyncThunk(
   }
 );
 
+const USER_ROLES = {
+  ADMIN: 'admin',
+  USER: 'user'
+};
+
+const DASHBOARD_ROUTES = {
+  [USER_ROLES.ADMIN]: '/admin/dashboard',
+  [USER_ROLES.USER]: '/user/dashboard'
+};
+
+const SESSION_KEYS = {
+  ACCESS_TOKEN: 'access_token',
+  CHAT_USER_ID: 'chatUserId',
+  SESSION_ID: 'sessionId',
+  AGENT: 'agent',
+  IS_EXISTING_USER: 'isExistingUser',
+  USER_ROLE: 'userRole',
+  PERMISSIONS: 'permissions'
+};
+
 const initialState = {
   user: null,
   token: null,
-  register: null,
-  forgotPassword: null,
-  verifyOTP: null,
-  resetPassword: null,
   refreshToken: null,
   isAuthenticated: false,
   isLoaded: false,
+  userRole: null,
+  permissions: [],
+  dashboardRoute: null,
   loading: {
     login: false,
     register: false,
     logout: false,
     getUserById: false,
+    updateUserById: false,
+    forgot: false,
+    verifyOtp: false,
+    resetPassword: false
   },
-  error: null,
-  registerError: null,
-  registerSuccess: false,
+  errors: {
+    login: null,
+    register: null,
+    forgot: null,
+    otp: null,
+    reset: null,
+    update: null,
+    general: null
+  },
+  status: {
+    registerSuccess: false,
+    forgotSuccess: false,
+    otpVerified: false,
+    resetSuccess: false
+  }
 };
 
 const authSlice = createSlice({
@@ -238,141 +283,148 @@ const authSlice = createSlice({
   },
 
   extraReducers: (builder) => {
+    const setLoading = (state, action) => {
+      state.loading[action] = true;
+      state.errors[action] = null;
+    };
+
+    const clearLoading = (state, action) => {
+      state.loading[action] = false;
+    };
+
+    const setError = (state, action, message) => {
+      state.loading[action] = false;
+      state.errors[action] = message || `${action} failed`;
+    };
+
     builder
+      // Login cases
       .addCase(login.pending, (state) => {
-        state.loading.login = true;
-        state.error = null;
+        setLoading(state, 'login');
         state.isAuthenticated = false;
       })
       .addCase(login.fulfilled, (state, { payload }) => {
-        const user = payload?.user;
-        const accessToken = payload?.session?.access_token;
-        const refreshToken = payload?.session?.refresh_token;
-
-        state.loading.login = false;
+        clearLoading(state, 'login');
+        const userRole = payload?.user?.role || USER_ROLES.USER;
+        
         state.isAuthenticated = true;
-        state.user = user || null;
-        state.token = accessToken || null;
-        state.refreshToken = refreshToken || null;
-        state.error = null;
-
-        // if (accessToken) {
-        //   setAuthToken(accessToken);
-        // }
+        state.user = payload?.user || null;
+        state.token = payload?.session?.access_token || null;
+        state.refreshToken = payload?.session?.refresh_token || null;
+        state.userRole = userRole;
+        state.permissions = payload?.user?.permissions || [];
+        state.dashboardRoute = DASHBOARD_ROUTES[userRole];
       })
       .addCase(login.rejected, (state, { payload }) => {
-        state.loading.login = false;
+        setError(state, 'login', payload?.message);
         state.isAuthenticated = false;
-        state.error = payload?.message || 'Login failed';
       })
+
       // Register cases
       .addCase(register.pending, (state) => {
-        state.loading.register = true;
-        state.registerError = null;
-        state.registerSuccess = false;
+        setLoading(state, 'register');
+        state.status.registerSuccess = false;
       })
-      .addCase(register.fulfilled, (state, { payload }) => {
-        state.loading.register = false;
-        state.registerSuccess = true;
-        state.registerSuccess = payload;
-        state.registerError = null;
+      .addCase(register.fulfilled, (state) => {
+        clearLoading(state, 'register');
+        state.status.registerSuccess = true;
       })
       .addCase(register.rejected, (state, { payload }) => {
-        state.loading.register = false;
-        state.registerSuccess = false;
-        state.registerError = payload?.message || 'Registration failed';
+        setError(state, 'register', payload?.message);
+        state.status.registerSuccess = false;
       })
 
+      // Forgot password cases
       .addCase(forgotPassword.pending, (state) => {
-        state.loading.forgot = true;
-        state.forgotSuccess = false;
-        state.forgotError = null;
+        setLoading(state, 'forgot');
+        state.status.forgotSuccess = false;
       })
-      .addCase(forgotPassword.fulfilled, (state, { payload }) => {
-        state.loading.forgot = false;
-        state.forgotPassword = payload;
-        state.forgotSuccess = true;
-        state.forgotError = null;
+      .addCase(forgotPassword.fulfilled, (state) => {
+        clearLoading(state, 'forgot');
+        state.status.forgotSuccess = true;
       })
       .addCase(forgotPassword.rejected, (state, { payload }) => {
-        state.loading.forgot = false;
-        state.forgotSuccess = false;
-        state.forgotError = payload?.message || 'Failed to send reset link';
+        setError(state, 'forgot', payload?.message);
+        state.status.forgotSuccess = false;
       })
 
+      // Verify OTP cases
       .addCase(verifyOtp.pending, (state) => {
-        state.loading.verifyOtp = true;
-        state.otpError = null;
-        state.otpVerified = false;
+        setLoading(state, 'verifyOtp');
+        state.status.otpVerified = false;
       })
-      .addCase(verifyOtp.fulfilled, (state, { payload }) => {
-        state.verifyOTP = payload;
-        state.loading.verifyOtp = false;
-        state.otpVerified = true;
+      .addCase(verifyOtp.fulfilled, (state) => {
+        clearLoading(state, 'verifyOtp');
+        state.status.otpVerified = true;
       })
       .addCase(verifyOtp.rejected, (state, { payload }) => {
-        state.loading.verifyOtp = false;
-        state.otpError = payload?.message;
+        setError(state, 'otp', payload?.message);
+        state.status.otpVerified = false;
       })
 
+      // Reset password cases
       .addCase(resetPassword.pending, (state) => {
-        state.loading.resetPassword = true;
-        state.resetSuccess = false;
-        state.resetError = null;
+        setLoading(state, 'resetPassword');
+        state.status.resetSuccess = false;
       })
-      .addCase(resetPassword.fulfilled, (state, { payload }) => {
-        state.resetPassword = payload;
-        state.loading.resetPassword = false;
-        state.resetSuccess = true;
+      .addCase(resetPassword.fulfilled, (state) => {
+        clearLoading(state, 'resetPassword');
+        state.status.resetSuccess = true;
       })
       .addCase(resetPassword.rejected, (state, { payload }) => {
-        state.loading.resetPassword = false;
-        state.resetError = payload?.message;
+        setError(state, 'reset', payload?.message);
+        state.status.resetSuccess = false;
       })
 
+      // Get user cases
       .addCase(getUserById.pending, (state) => {
-        state.loading.getUserById = true;
+        setLoading(state, 'getUserById');
       })
       .addCase(getUserById.fulfilled, (state, { payload }) => {
-        state.loading.getUserById = false;
+        clearLoading(state, 'getUserById');
         state.user = payload;
       })
       .addCase(getUserById.rejected, (state, { payload }) => {
-        state.loading.getUserById = false;
-        state.error = payload?.message || 'Failed to fetch user';
+        setError(state, 'general', payload?.message);
       })
 
+      // Update user cases
       .addCase(updateUserById.pending, (state) => {
-        state.loading.updateUserById = true;
+        setLoading(state, 'updateUserById');
       })
       .addCase(updateUserById.fulfilled, (state, { payload }) => {
-        state.loading.updateUserById = false;
+        clearLoading(state, 'updateUserById');
         state.user = payload;
       })
       .addCase(updateUserById.rejected, (state, { payload }) => {
-        state.loading.updateUserById = false;
-        state.error = payload?.message || 'Failed to update user';
+        setError(state, 'update', payload?.message);
       })
 
+      // Logout cases
       .addCase(logoutUser.pending, (state) => {
-        state.loading.logout = true;
-        state.error = null;
+        setLoading(state, 'logout');
       })
       .addCase(logoutUser.fulfilled, (state) => {
         Object.assign(state, {
           user: null,
           token: null,
+          refreshToken: null,
           isAuthenticated: false,
+          userRole: null,
+          permissions: [],
+          dashboardRoute: null,
           loading: {
             ...state.loading,
-            logout: false,
+            logout: false
           },
-          error: null,
+          errors: {
+            ...state.errors,
+            general: null
+          }
         });
       })
       .addCase(logoutUser.rejected, (state, { payload }) => {
-        state.loading.logout = false;
-        state.error = payload?.message || 'Logout failed';
+        setError(state, 'general', payload?.message);
       });
   },
 });
@@ -380,10 +432,52 @@ const authSlice = createSlice({
 export const { logout, clearError } = authSlice.actions;
 export default authSlice.reducer;
 
+// Base selectors
 export const selectAuth = (state) => state.auth;
 export const selectIsAuthenticated = (state) => state.auth?.isAuthenticated;
+export const selectUser = (state) => state.auth?.user;
+
+// Role and Permission selectors
+export const selectUserRole = (state) => state.auth?.userRole;
+export const selectUserPermissions = (state) => state.auth?.permissions;
+export const selectDashboardRoute = (state) => state.auth?.dashboardRoute;
+export const selectIsAdmin = (state) => state.auth?.userRole === USER_ROLES.ADMIN;
+
+// Status selectors
+export const selectAuthStatus = (state) => state.auth?.status;
+export const selectAuthLoading = (state) => state.auth?.loading;
+export const selectAuthErrors = (state) => state.auth?.errors;
+
+// Route access selectors
+export const selectCanAccessAdminRoutes = (state) => 
+  state.auth?.userRole === USER_ROLES.ADMIN && state.auth?.isAuthenticated;
+  
+export const selectCanAccessUserRoutes = (state) => 
+  state.auth?.isAuthenticated;
+
+// Combined selectors for specific features
 export const selectRegisterState = (state) => ({
   loading: state.auth.loading.register,
-  error: state.auth.registerError,
-  success: state.auth.registerSuccess,
+  error: state.auth.errors.register,
+  success: state.auth.status.registerSuccess
+});
+
+export const selectPasswordResetState = (state) => ({
+  loading: state.auth.loading.resetPassword,
+  error: state.auth.errors.reset,
+  success: state.auth.status.resetSuccess
+});
+
+export const selectOtpState = (state) => ({
+  loading: state.auth.loading.verifyOtp,
+  error: state.auth.errors.otp,
+  verified: state.auth.status.otpVerified
+});
+
+// Auth state selector for layout decisions
+export const selectAuthLayoutState = (state) => ({
+  isAuthenticated: state.auth?.isAuthenticated,
+  userRole: state.auth?.userRole,
+  dashboardRoute: state.auth?.dashboardRoute,
+  isLoaded: state.auth?.isLoaded
 });
