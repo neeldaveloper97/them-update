@@ -1,0 +1,16 @@
+{
+  "name": "T.H.E.M - Transformative Healthcare Expenses Mediators",
+  "short_name": "T.H.E.M",
+  "description": "Your AI-powered growth partner for life's challenges",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#000000",
+  "icons": [
+    {
+      "src": "/them_logo.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}
