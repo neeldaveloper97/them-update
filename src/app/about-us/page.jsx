@@ -1,9 +1,9 @@
 'use client';
 import { DynamicDataList } from '@/config/orgData.js';
 import SectionBg from '@/app/assets/about_banner_bg.png';
-import AboutSection from '@/components/dynamicTemplate/AboutUs.jsx';
-import InfoBanner from '@/components/dynamicTemplate/InfoBanner.jsx';
-import WhatWeDo from '@/components/dynamicTemplate/WhatWeDo.jsx';
+import AboutSection from '@/components/DynamicTemplate/AboutUs.jsx';
+import InfoBanner from '@/components/DynamicTemplate/InfoBanner.jsx';
+import WhatWeDo from '@/components/DynamicTemplate/WhatWeDo.jsx';
 
 export default function AboutPage() {
     const {

@@ -3,12 +3,12 @@
 import { useEffect } from 'react';
 import { DynamicDataList } from '@/config/orgData';
 
-import Banner from '@/components/dynamicTemplate/Banner';
-import AboutSection from '@/components/dynamicTemplate/AboutUs';
-import WhatWeDo from '@/components/dynamicTemplate/WhatWeDo';
-import HowItWorks from '@/components/dynamicTemplate/HowItWorks';
-import SubscriptionPlans from '@/components/dynamicTemplate/SubscriptionPlans';
-import FaqSection from '@/components/dynamicTemplate/FaqSection';
+import Banner from '@/components/DynamicTemplate/Banner';
+import AboutSection from '@/components/DynamicTemplate/AboutUs';
+import WhatWeDo from '@/components/DynamicTemplate/WhatWeDo';
+import HowItWorks from '@/components/DynamicTemplate/HowItWorks';
+import SubscriptionPlans from '@/components/DynamicTemplate/SubscriptionPlans';
+import FaqSection from '@/components/DynamicTemplate/FaqSection';
 
 export default function Page() {
   // Scroll to top on mount

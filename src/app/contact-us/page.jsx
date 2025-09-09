@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
-import InfoBanner from '@/components/dynamicTemplate/InfoBanner';
+import InfoBanner from '@/components/DynamicTemplate/InfoBanner';
 import { DynamicDataList } from '@/config/orgData';
 import SectionBg from '@/app/assets/about_banner_bg.png';
 import { Button } from '@/components/ui/button';

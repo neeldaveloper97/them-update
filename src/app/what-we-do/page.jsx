@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react';
 import { DynamicDataList } from '@/config/orgData';
-import InfoBanner from '@/components/dynamicTemplate/InfoBanner';
+import InfoBanner from '@/components/DynamicTemplate/InfoBanner';
 
 import SectionBg from '@/app/assets/about_banner_bg.png';
 import Image from 'next/image';

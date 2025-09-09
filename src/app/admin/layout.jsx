@@ -2,19 +2,25 @@
 
 import { useSelector } from 'react-redux';
 import { selectAuthLayoutState } from '@/store/slices/authSlice';
-import { redirect } from 'next/navigation';
+import { redirect, usePathname } from 'next/navigation';
+import AdminSideBar from '@/components/SideBar/AdminSideBar/AdminSideBar';
 
 export default function AdminLayout({ children }) {
   const { isAuthenticated, userRole, isLoaded } = useSelector(selectAuthLayoutState);
-
+  const pathname = usePathname();
+ 
   if (isLoaded && (!isAuthenticated || userRole !== 'admin')) {
     redirect('/login');
   }
 
   return (
-    <div className="admin-layout">
-      {/* Add your admin sidebar and header components here */}
-      <main>{children}</main>
+    <div className="flex h-screen overflow-hidden">
+      <AdminSideBar pathname={pathname} />
+      <div className="flex-1 overflow-auto">
+        <main className="p-8">
+          {children}
+        </main>
+      </div>
     </div>
   );
 }

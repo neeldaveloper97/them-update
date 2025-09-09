@@ -41,10 +41,10 @@ export const login = createAsyncThunk(
         return rejectWithValue(response);
       }
       if (response.data.session?.access_token) {
-        debugger
         const userRole = response.data.user.role || USER_ROLES.USER;
         const permissions = response.data.user.permissions || [];
-        
+        const dashboardRoute = DASHBOARD_ROUTES[userRole];
+        debugger
         Object.entries({
           [SESSION_KEYS.ACCESS_TOKEN]: response.data.session.access_token,
           [SESSION_KEYS.CHAT_USER_ID]: response.data.user.id,
@@ -52,7 +52,8 @@ export const login = createAsyncThunk(
           [SESSION_KEYS.AGENT]: response.data.user.agent,
           [SESSION_KEYS.IS_EXISTING_USER]: response.data.isFirstMessageHandled,
           [SESSION_KEYS.USER_ROLE]: userRole,
-          [SESSION_KEYS.PERMISSIONS]: JSON.stringify(permissions)
+          [SESSION_KEYS.PERMISSIONS]: JSON.stringify(permissions),
+          'dashboardRoute': dashboardRoute
         }).forEach(([key, value]) => {
           if (value != null) {
             sessionStorage.setItem(key, value);

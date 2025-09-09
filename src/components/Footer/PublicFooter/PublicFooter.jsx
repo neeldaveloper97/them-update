@@ -9,7 +9,6 @@ import {
     Phone,
     Twitter,
 } from 'lucide-react';
-import React from 'react';
 
 // Optional: provide a sensible default so the footer works out-of-the-box
 const defaultFooterData = {

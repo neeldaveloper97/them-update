@@ -49,7 +49,10 @@ export default function LoginPage() {
 
     const { isAuthenticated } = useSelector(selectAuth) || false;
 
-    const callbackUrl = searchParams.get('callbackUrl') || '/dashboard';
+    console.log('isAuthenticated:', isAuthenticated);
+
+    const { dashboardRoute } = useSelector(selectAuth) || { dashboardRoute: '/user/dashboard' };
+    console.log('isAuthenticated:', isAuthenticated);
 
     const {
         register,
@@ -63,11 +66,13 @@ export default function LoginPage() {
     });
 
     const handleAuthSuccess = useCallback(() => {
-        const target = callbackUrl.startsWith('http')
-            ? callbackUrl
-            : `${window.location.origin}${callbackUrl}`;
-        window.location.href = target;
-    }, [callbackUrl]);
+        debugger
+        const target = searchParams.get('callbackUrl') || dashboardRoute;
+        const redirectUrl = target.startsWith('http')
+            ? target
+            : `${window.location.origin}${target}`;
+        window.location.href = redirectUrl;
+    }, [searchParams, dashboardRoute]);
 
     const handleAuthError = useCallback(
         (error) => {
@@ -93,6 +98,7 @@ export default function LoginPage() {
                 })
             );
             if (result.meta.requestStatus === 'fulfilled') {
+                debugger
                 handleAuthSuccess();
             } else {
                 handleAuthError(result.error);
@@ -107,9 +113,9 @@ export default function LoginPage() {
     useEffect(() => {
         setSessionId(sessionStorage.getItem('sessionId'));
         if (isAuthenticated) {
-            router.replace('/dashboard');
+            router.replace(dashboardRoute);
         }
-    }, [isAuthenticated, router]);
+    }, [isAuthenticated, router, dashboardRoute]);
 
     return (
         <div className="relative flex min-h-screen gap-5 p-5 lg:p-8 xl:p-16">
