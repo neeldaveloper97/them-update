@@ -1,11 +1,8 @@
-import React from 'react';
-import PricingModulePattern from '@/assets/svg/pricing_module_pattern.svg';
-import IndividualIcon from '@/assets/svg/icon_individual.svg';
-import DoctorIcon from '@/assets/svg/icon_doctor.svg';
-import EmployeeIcon from '@/assets/svg/icon_employee.svg';
+import DoctorIcon from '@/app/assets/svg/icon_doctor.svg';
+import EmployeeIcon from '@/app/assets/svg/icon_employee.svg';
+import IndividualIcon from '@/app/assets/svg/icon_individual.svg';
+import PricingModulePattern from '@/app/assets/svg/pricing_module_pattern.svg';
 import { BadgeCheck } from 'lucide-react';
-import { Button } from '../ui/button';
-import Link from 'next/link';
 
 const PlanCard = ({
   title,

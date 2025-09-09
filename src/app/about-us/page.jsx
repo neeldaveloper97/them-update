@@ -1,6 +1,6 @@
 'use client';
 import { DynamicDataList } from '@/config/orgData.js';
-import SectionBg from '../assets/about_banner_bg.png';
+import SectionBg from '@/app/assets/about_banner_bg.png';
 import AboutSection from '@/components/dynamicTemplate/AboutUs.jsx';
 import InfoBanner from '@/components/dynamicTemplate/InfoBanner.jsx';
 import WhatWeDo from '@/components/dynamicTemplate/WhatWeDo.jsx';

@@ -1,5 +1,5 @@
 import { BadgeCheck } from 'lucide-react';
-import BannerBg from '../BannerBg';
+import BannerBg from './BannerBg';
 
 const Banner = ({ bannerData }) => {
   return (
