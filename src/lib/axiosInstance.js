@@ -160,6 +160,10 @@ axiosInstance.interceptors.response.use(
       if (isBrowser) {
         try {
           window.localStorage.removeItem('token');
+          // Clear authentication cookies on 401 error
+          document.cookie = 'isAuthenticated=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+          document.cookie = 'userRole=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+          document.cookie = 'sidebar_state=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
         } catch {}
       }
     } else {

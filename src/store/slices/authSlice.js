@@ -41,10 +41,12 @@ export const login = createAsyncThunk(
         return rejectWithValue(response);
       }
       if (response.data.session?.access_token) {
-        const userRole = response.data.user.role || USER_ROLES.USER;
+        // Extract role from the correct location in the response
+        const userRole = response.data.session.user.user_metadata?.role || USER_ROLES.USER;
         const permissions = response.data.user.permissions || [];
         const dashboardRoute = DASHBOARD_ROUTES[userRole];
-        debugger
+        
+        // Store session data
         Object.entries({
           [SESSION_KEYS.ACCESS_TOKEN]: response.data.session.access_token,
           [SESSION_KEYS.CHAT_USER_ID]: response.data.user.id,
@@ -59,6 +61,10 @@ export const login = createAsyncThunk(
             sessionStorage.setItem(key, value);
           }
         });
+
+        // Set cookies for middleware
+        document.cookie = `isAuthenticated=true; path=/; max-age=3600`;
+        document.cookie = `userRole=${userRole}; path=/; max-age=3600`;
       }
       return response.data;
     } catch (error) {
@@ -175,6 +181,11 @@ const clearStorageData = () => {
     sessionStorage.removeItem(key);
   });
   localStorage.clear();
+  
+  // Clear all authentication and UI state cookies
+  document.cookie = 'isAuthenticated=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+  document.cookie = 'userRole=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+  document.cookie = 'sidebar_state=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
 };
 
 export const logoutUser = createAsyncThunk(
@@ -206,12 +217,14 @@ export const logoutUser = createAsyncThunk(
 
 const USER_ROLES = {
   ADMIN: 'admin',
-  USER: 'user'
+  USER: 'user',
+  SUPER_ADMIN: 'super_admin'
 };
 
 const DASHBOARD_ROUTES = {
   [USER_ROLES.ADMIN]: '/admin/dashboard',
-  [USER_ROLES.USER]: '/user/dashboard'
+  [USER_ROLES.USER]: '/user/dashboard',
+  [USER_ROLES.SUPER_ADMIN]: '/admin/dashboard'
 };
 
 const SESSION_KEYS = {
@@ -281,6 +294,14 @@ const authSlice = createSlice({
     setIsLoaded: (state, action) => {
       state.isLoaded = action.payload;
     },
+    setInitialAuthState: (state, action) => {
+      const { isAuthenticated, userRole, token, userId } = action.payload;
+      state.isAuthenticated = isAuthenticated;
+      state.userRole = userRole;
+      state.token = token;
+      state.user = { id: userId };
+      state.isLoaded = true;
+    },
   },
 
   extraReducers: (builder) => {
@@ -306,7 +327,8 @@ const authSlice = createSlice({
       })
       .addCase(login.fulfilled, (state, { payload }) => {
         clearLoading(state, 'login');
-        const userRole = payload?.user?.role || USER_ROLES.USER;
+        // Extract role from the correct location in the response
+        const userRole = payload?.session?.user?.user_metadata?.role || USER_ROLES.USER;
         
         state.isAuthenticated = true;
         state.user = payload?.user || null;
@@ -430,7 +452,7 @@ const authSlice = createSlice({
   },
 });
 
-export const { logout, clearError } = authSlice.actions;
+export const { logout, clearError, setInitialAuthState } = authSlice.actions;
 export default authSlice.reducer;
 
 // Base selectors
@@ -442,7 +464,8 @@ export const selectUser = (state) => state.auth?.user;
 export const selectUserRole = (state) => state.auth?.userRole;
 export const selectUserPermissions = (state) => state.auth?.permissions;
 export const selectDashboardRoute = (state) => state.auth?.dashboardRoute;
-export const selectIsAdmin = (state) => state.auth?.userRole === USER_ROLES.ADMIN;
+export const selectIsAdmin = (state) => 
+  state.auth?.userRole === USER_ROLES.ADMIN || state.auth?.userRole === USER_ROLES.SUPER_ADMIN;
 
 // Status selectors
 export const selectAuthStatus = (state) => state.auth?.status;
@@ -451,7 +474,7 @@ export const selectAuthErrors = (state) => state.auth?.errors;
 
 // Route access selectors
 export const selectCanAccessAdminRoutes = (state) => 
-  state.auth?.userRole === USER_ROLES.ADMIN && state.auth?.isAuthenticated;
+  (state.auth?.userRole === USER_ROLES.ADMIN || state.auth?.userRole === USER_ROLES.SUPER_ADMIN) && state.auth?.isAuthenticated;
   
 export const selectCanAccessUserRoutes = (state) => 
   state.auth?.isAuthenticated;

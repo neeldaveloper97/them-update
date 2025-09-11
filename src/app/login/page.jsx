@@ -66,7 +66,6 @@ export default function LoginPage() {
     });
 
     const handleAuthSuccess = useCallback(() => {
-        debugger
         const target = searchParams.get('callbackUrl') || dashboardRoute;
         const redirectUrl = target.startsWith('http')
             ? target
@@ -98,7 +97,6 @@ export default function LoginPage() {
                 })
             );
             if (result.meta.requestStatus === 'fulfilled') {
-                debugger
                 handleAuthSuccess();
             } else {
                 handleAuthError(result.error);

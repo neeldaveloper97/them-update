@@ -33,7 +33,7 @@ const defaultFooterData = {
         { type: 'phone', value: '+980 123 (4587) 584' },
         { type: 'address', value: '123 Anywhere St, City, Country' },
     ],
-    copyright: `© ${new Date().getFullYear()} T.H.E.M. All rights reserved.`,
+    copyright: `© 2024 T.H.E.M. All rights reserved.`,
     legalLinks: (
         <>
             <a href="/privacy-policy" className="hover:underline">
