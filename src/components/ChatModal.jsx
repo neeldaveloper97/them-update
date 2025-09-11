@@ -66,6 +66,7 @@ function ChatModal({
   const pathname = usePathname();
   const [recognition, setRecognition] = useState(null);
   const [speechSupported, setSpeechSupported] = useState(false);
+  
   // orgId no longer dynamic; hardcode to 'them'
   const {
     messages,
