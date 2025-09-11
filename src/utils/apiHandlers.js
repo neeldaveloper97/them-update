@@ -44,7 +44,7 @@ export const handleNegotiationStart = async ({
     const response = await dispatch(submitNegotiation({ id, poa })).unwrap();
     if (response?.success) {
       sessionStorage.setItem('billId', id);
-      router.push(`/${orgId}/dashboard/bill-Intake-Prep`);
+      router.push(`/them/dashboard/bill-Intake-Prep`);
     } else {
       console.warn('Negotiation API did not return success:', response);
     }
@@ -175,7 +175,7 @@ export async function submitNegotiationHandler({
   try {
     await dispatch(submitNegotiation(id)).unwrap();
     sessionStorage.setItem('billId', id);
-    router.push(`/${orgId}/dashboard/bill-Intake-Prep`);
+    router.push(`/them/dashboard/bill-Intake-Prep`);
   } catch (err) {
     console.error('Negotiation failed:', err);
   } finally {

@@ -15,7 +15,7 @@ export const getUserId = async (orgId) => {
       const { data } = await axios.post(`${BASE_URL}/api/v1/auth/signup`, {
         email: randomEmail,
         password: 'Secure@Password123',
-        agent: orgId || 'them',
+        agent: 'them',
       });
 
       const userIdFromServer = data?.data?.user?.id;

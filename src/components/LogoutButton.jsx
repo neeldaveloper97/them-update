@@ -22,17 +22,16 @@ export default function LogoutButton({ className }) {
   };
 
   return (
-    <button
-      onClick={handleLogout}
-      className={cn(
-        'flex items-center gap-2 px-3 py-3.5 text-sm rounded-none font-medium transition-colors border-r-2 h-auto border-transparent text-red-600 hover:text-red-700 hover:bg-red-50 w-full',
-        className
-      )}
-    >
-      <span className="block size-6">
-        <LogOut className="w-5 h-5" />
-      </span>
-      <span>Logout</span>
-    </button>
+    <div className="p-2.5">
+      <button
+        onClick={handleLogout}
+        className="flex rounded-full justify-center items-center gap-1.5 bg-org-primary p-2.5 w-full text-white cursor-pointer"
+      >
+        <span className="block size-6">
+          <LogOut className="w-5 h-5" />
+        </span>
+        <span>Logout</span>
+      </button>
+    </div>
   );
 }

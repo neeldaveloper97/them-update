@@ -193,7 +193,7 @@ export default function useChatCore({
         onAgentStream: handlers.handleAgentStream,
         onAgentStreamEnd: handlers.handleAgentStreamEnd,
         onAgentStreamError: handlers.handleAgentStreamError,
-        onError: () => {
+        onError: (error) => {
           setMessages((prev) => [
             ...prev,
             {
@@ -257,7 +257,7 @@ export default function useChatCore({
         handlers.handleVisibilityChange
       );
     };
-  }, [welcomeMessage, suppressWelcome, streamingHandlers]);
+  }, [welcomeMessage, streamingHandlers]);
 
   useEffect(() => {
     if (isTyping) {

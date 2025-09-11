@@ -46,7 +46,7 @@ export default function PublicHeader() {
                 <div className="py-3 text-sm text-white bg-primary-color sm:py-4 top_bar">
                     <div className="container relative z-20 flex flex-row items-center justify-between px-4 space-y-2 sm:space-y-0">
                         <div className="flex flex-col sm:flex-row sm:space-x-4 items-start !mb-0 space-y-1 sm:space-y-0">
-                            <a
+                            {/* <a
                                 href="mailto:info@themediators.net"
                                 className="flex items-center space-x-1 text-xs sm:text-sm hover:underline"
                             >
@@ -59,7 +59,7 @@ export default function PublicHeader() {
                             >
                                 <Phone size={12} className="sm:w-4 sm:h-4" />
                                 <span className="">+980 123 (4587) 584</span>
-                            </a>
+                            </a> */}
                         </div>
                         <div className="flex space-x-4">
                             <a

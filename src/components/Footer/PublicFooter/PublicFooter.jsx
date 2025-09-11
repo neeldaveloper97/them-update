@@ -29,8 +29,8 @@ const defaultFooterData = {
         { title: 'Terms & Conditions', url: '/terms-and-conditions' },
     ],
     contact: [
-        { type: 'email', value: 'info@themediators.net' },
-        { type: 'phone', value: '+980 123 (4587) 584' },
+        // { type: 'email', value: 'info@themediators.net' },
+        // { type: 'phone', value: '+980 123 (4587) 584' },
         { type: 'address', value: '123 Anywhere St, City, Country' },
     ],
     copyright: `© 2024 T.H.E.M. All rights reserved.`,

@@ -509,13 +509,13 @@ export const DynamicDataList = [
                 />
               ),
             },
-            {
-              title: 'Email Address',
-              value: 'info@themediators.net',
-              icon: (
-                <Icon icon="ion:mail-open-outline" width="40" height="40" />
-              ),
-            },
+            // {
+            //   title: 'Email Address',
+            //   value: 'info@themediators.net',
+            //   icon: (
+            //     <Icon icon="ion:mail-open-outline" width="40" height="40" />
+            //   ),
+            // },
             {
               title: 'Office Address',
               value:

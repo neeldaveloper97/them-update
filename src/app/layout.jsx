@@ -13,6 +13,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import PublicHeader from '@/components/Header/PublicHeader/PublicHeader.jsx';
 import PublicFooter from '@/components/Footer/PublicFooter/PublicFooter.jsx';
+import ChatModal from '@/components/ChatModal';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -99,6 +100,9 @@ const ConditionalHeaderFooter = ({ children }) => {
 };
 
 export default function RootLayout({ children }) {
+  const pathname = usePathname();
+  const hideChatOnRoutes = ['/login', '/register', '/reset-password', '/forgot-password'];
+  const shouldShowChat = !hideChatOnRoutes.includes(pathname);
   return (
     <html lang="en">
       <body
@@ -108,6 +112,9 @@ export default function RootLayout({ children }) {
           <ConditionalHeaderFooter>
             {children}
           </ConditionalHeaderFooter>
+
+          {/* Global Chat Assistant - visible on all pages (pre/post login) */}
+          {shouldShowChat && <ChatModal panelType="default" />}
 
           {/* Toasts */}
           <ToastContainer

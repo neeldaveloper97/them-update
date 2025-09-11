@@ -118,7 +118,7 @@ export function sendMessage(
   const payload = {
     userId,
     message,
-    agent: orgId,
+    agent: 'them',
     sessionId,
   };
 
