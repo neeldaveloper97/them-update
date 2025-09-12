@@ -80,7 +80,6 @@ export default function UserDashboard() {
     const { user } = useSelector(selectAuth);
     const [greeting, setGreeting] = useState('Good Morning');
     const [currentDate, setCurrentDate] = useState('');
-    // orgId removed from path; default to 'them' where needed in links
     const [runDashboardTour, setRunDashboardTour] = useState(false);
     const [isExistingUser, setIsExistingUser] = useState();
  

@@ -195,22 +195,24 @@ export const logoutUser = createAsyncThunk(
       const userId = sessionStorage.getItem(SESSION_KEYS.CHAT_USER_ID);
       const sessionId = sessionStorage.getItem(SESSION_KEYS.SESSION_ID);
 
+      // If we don't have session identifiers, still clear local data and resolve
       if (!userId || !sessionId) {
-        return rejectWithValue('Missing session or user ID');
+        clearStorageData();
+        return { success: true, message: 'No active session found' };
       }
 
       const response = await authService.logout({ userId, sessionId });
 
-      if (!response?.success) {
-        return rejectWithValue(response?.message || 'Logout failed');
-      }
-
+      // Always clear client-side storage regardless of API result
       clearStorageData();
       return response;
     } catch (error) {
-      return rejectWithValue(
-        error?.response?.data || { message: 'Logout request failed' }
-      );
+      // Clear client-side state even if the API call fails (network, server issues, etc.)
+      clearStorageData();
+      return {
+        success: false,
+        ...(error?.response?.data || { message: 'Logout request failed' }),
+      };
     }
   }
 );

@@ -56,76 +56,9 @@ export const createStreamingHandlers = ({
     stream();
   };
 
-  const handleAgentResponse = (data) => {
-    clearPendingTimeout();
-
-    const messageId = Date.now().toString();
-    const fullMessage = data.message;
-
-    const botMessage = {
-      id: messageId,
-      content: '',
-      sender: 'bot',
-      timestamp: new Date(),
-      agent: data.agent,
-      mentalModel: data.mentalModel || '',
-      tone: data.tone,
-      valence: data.valence,
-      growth_signal: data.growth_signal,
-      reflection_summary: data.reflection_summary,
-      isFinal: false,
-    };
-
-    setMessages((prev) => [...prev, botMessage]);
-    setIsTyping(false);
-
-    let valenceValue = parseFloat(data.valence);
-    if (isNaN(valenceValue)) valenceValue = 0.5;
-    valenceValue = Math.max(0, Math.min(1, valenceValue));
-    setLatestValence(valenceValue);
-
-    const emotionalStage =
-      data.emotionalStage ||
-      (valenceValue > 0.7
-        ? 'positive'
-        : valenceValue < 0.3
-          ? 'negative'
-          : 'neutral');
-
-    dispatch(
-      updateTrustData({
-        valence: valenceValue,
-        confidence: parseFloat(data.confidence) || 0.5,
-        emotionalStage,
-        reflection_summary: data.reflection_summary,
-      })
-    );
-
-    let i = 0;
-    const interval = setInterval(() => {
-      if (i < fullMessage.length) {
-        setMessages((prev) =>
-          prev.map((msg) =>
-            msg.id === messageId
-              ? { ...msg, content: fullMessage.substring(0, i + 1) }
-              : msg
-          )
-        );
-        i++;
-      } else {
-        clearInterval(interval);
-        setIsTyping(false);
-        setIsLoading(false);
-
-        setMessages((prev) =>
-          prev.map((msg) =>
-            msg.id === messageId
-              ? { ...msg, content: fullMessage, isFinal: true }
-              : msg
-          )
-        );
-      }
-    }, 10);
+  const handleAgentResponse = () => {
+    // Prefer streaming events exclusively to avoid duplicate messages
+    return;
   };
 
   const handleAgentStream = (rawDelta) => {

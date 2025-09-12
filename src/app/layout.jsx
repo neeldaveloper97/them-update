@@ -104,8 +104,9 @@ export default function RootLayout({ children }) {
   const hideChatOnRoutes = ['/login', '/register', '/reset-password', '/forgot-password'];
   const shouldShowChat = !hideChatOnRoutes.includes(pathname);
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
+        suppressHydrationWarning
         className={`${geistSans.variable} ${geistMono.variable} ${sora.variable} antialiased bg-white text-gray-900 min-h-screen`}
       >
         <ReduxProvider>

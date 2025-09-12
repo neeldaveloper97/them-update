@@ -107,7 +107,7 @@ export default function PublicHeader() {
                 <div className="container flex items-center justify-between px-4">
                     <Link href="/" className="text-2xl font-semibold leading-relaxed text-primary-dark">
                         {/* Replace with your logo component if available */}
-                        <img src="/images/them_logo.svg" alt="T.H.E.M. logo" className="w-14" />
+                        <img src="/images/them_logo.png" alt="T.H.E.M. logo" className="w-14" />
                     </Link>
 
                     <div>

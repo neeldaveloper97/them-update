@@ -53,6 +53,8 @@ export default function useChatCore({
   const progressIndexRef = useRef(0);
   const dotsTimeoutRef = useRef(null);
   const progressIntervalRef = useRef(null);
+  // Guard against double effects in React StrictMode (Next.js dev)
+  const initializedRef = useRef(false);
 
   const messageTimeoutRef = useRef(null);
   const inputRef = useRef(null);
@@ -166,6 +168,8 @@ export default function useChatCore({
   }, []);
 
   useEffect(() => {
+    if (initializedRef.current) return;
+    initializedRef.current = true;
     const path = window.location.pathname;
     setIsLoading(true);
     let isMounted = true;

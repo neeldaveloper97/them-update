@@ -4,11 +4,7 @@ import { useEffect, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import PropTypes from 'prop-types';
 
-import {
-  disconnectDashboardSocket,
-  initializeDashboardSocket,
-} from '@/services/dashboardSocketService';
-import { disconnectSocket } from '@/services/socketService';
+// Sockets are fully managed inside useChatCore
 
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
@@ -67,7 +63,7 @@ function ChatModal({
   const [recognition, setRecognition] = useState(null);
   const [speechSupported, setSpeechSupported] = useState(false);
   
-  // orgId no longer dynamic; hardcode to 'them'
+
   const {
     messages,
     setMessages,
@@ -204,37 +200,9 @@ function ChatModal({
 
     document.addEventListener('keydown', handleKeyDown);
 
-    initializeDashboardSocket();
-
-    const initChat = async () => {
-      setIsLoading(true);
-
-      setMessages([
-        {
-          id: '1',
-          content:
-            "Hello! 👋 I'm here to help you through whatever challenges you're facing. Choose one of the quick options above or simply type your message to get started.",
-          sender: 'bot',
-          timestamp: new Date(),
-        },
-      ]);
-
-      setIsLoading(false);
-      if (inputRef.current) {
-        inputRef.current.focus();
-      }
-    };
-
-    initChat();
-
     return () => {
       document.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener('resize', checkMobile);
-      if (socket) {
-        disconnectSocket(socket);
-      }
-      disconnectDashboardSocket();
-      // Cleanup speech recognition
       if (recognition) {
         recognition.stop();
       }

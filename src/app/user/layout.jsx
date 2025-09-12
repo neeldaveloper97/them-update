@@ -18,9 +18,9 @@ export default function UserLayout({ children }) {
   return (
     <SidebarProvider>
       <UserSideBar pathname={pathname} />
-      <SidebarInset className="overflow-auto bg-white">
+      <SidebarInset className="overflow-auto bg-primary-light-50">
         <DashboardHeader pageTitle={"Dashboard"} />
-        <main className="p-0">
+        <main className="p-6 flex bg-primary-light-50 w-full h-full">
           {children}
         </main>
       </SidebarInset>
