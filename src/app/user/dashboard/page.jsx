@@ -352,7 +352,7 @@ export default function UserDashboard() {
                                         </CardContent>
                                         <CardFooter className="flex flex-col items-center justify-center">
                                             <Button asChild>
-                                                <Link href={`/them/dashboard/bill-upload`}>
+                                                <Link href={`/user/bill-upload`}>
                                                     Upload First Bill
                                                 </Link>
                                             </Button>
@@ -372,7 +372,7 @@ export default function UserDashboard() {
                                 <ul className="space-y-4 pt-5">
                                     {isExistingUser === 'true' && (
                                         <li>
-                                            <Link href={`/them/dashboard/bill-upload`}>
+                                            <Link href={`/user/bill-upload`}>
                                                 <div className="flex items-center justify-between p-4 shadow-2 rounded-2xl cursor-pointer hover:bg-gray-50 transition">
                                                     <div className="flex items-center gap-3">
                                                         <div className="size-12 rounded-full flex items-center justify-center bg-amber-100 text-amber-600">
@@ -388,7 +388,7 @@ export default function UserDashboard() {
                                         </li>
                                     )}
                                     <li>
-                                        <Link href={`/them/dashboard/support`}>
+                                        <Link href={`/user/support`}>
                                             <div className="flex items-center justify-between p-4 shadow-2 rounded-2xl cursor-pointer hover:bg-gray-50 transition">
                                                 <div className="flex items-center gap-3">
                                                     <div className="size-12 rounded-full flex items-center justify-center bg-blue-100">
@@ -442,7 +442,7 @@ export default function UserDashboard() {
                                             Claims Overview
                                         </h3>
                                         <Button asChild className="rounded-xl">
-                                            <Link href={`/them/dashboard/bill-Intake-Prep`}>
+                                            <Link href={`/user/bill-Intake-Prep`}>
                                                 View All
                                             </Link>
                                         </Button>
@@ -518,7 +518,7 @@ export default function UserDashboard() {
                                                                         className="text-org-primary-color"
                                                                     >
                                                                         <Link
-                                                                            href={`/them/dashboard/bill-upload-initiate-negotiation/${encodeURIComponent(
+                                                                            href={`/user/bill-upload-initiate-negotiation/${encodeURIComponent(
                                                                                 data.id || ''
                                                                             )}?mode=view`}
                                                                         >
@@ -627,7 +627,7 @@ export default function UserDashboard() {
                                             )}
                                         </div>
                                         <Button className="w-full rounded-xl" asChild>
-                                            <Link href={`/them/dashboard/bill-upload`}>
+                                            <Link href={`/user/bill-upload`}>
                                                 View Bills
                                             </Link>
                                         </Button>

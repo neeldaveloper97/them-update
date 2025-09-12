@@ -218,9 +218,9 @@ export default function useChatCore({
 
       // Define messages for each specific path
       const pathMessages = {
-        '/them/dashboard':
+        '/user/dashboard':
           'Hi there — if you’ve got a medical bill handy, you can drop it here and I’ll highlight a few things you might want to question.',
-        '/them':
+        '/':
           'Hi there — if you’ve got a medical bill handy, you can drop it here and I’ll highlight a few things you might want to question.',
       };
 

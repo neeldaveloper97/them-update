@@ -30,8 +30,8 @@ export default function NegotiatePlanPage() {
     if (a) dispatch(fetchPlans(a));
   }, [dispatch]);
 
-  const successUrl = `them/dashboard/bill-upload`;
-  const cancelUrl = `them/dashboard/plans`;
+  const successUrl = `user/bill-upload`;
+  const cancelUrl = `user/plans`;
 
   const getPlanVisuals = (name) => {
     switch (name) {

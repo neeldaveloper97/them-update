@@ -92,7 +92,7 @@ const Page = () => {
       {!dashboardTourCompleted && ReportsTour && (
         <TourProvider steps={REPORTS_ANALYTICS_TOUR_STEPS} />
       )}
-      <div className="grid grid-cols-1 lg:grid-cols-6 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-6 gap-6 w-full h-fit">
         {/* Chart card */}
         <div className="col-span-1 lg:col-span-4">
           <div

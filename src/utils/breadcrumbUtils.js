@@ -59,7 +59,7 @@ export const generateBreadcrumbs = (pathname, orgId) => {
   const breadcrumbs = [
     {
       label: 'Dashboard',
-      href: `/them/dashboard`,
+      href: `/user/dashboard`,
       isActive:
         relevantSegments.length === 1 && relevantSegments[0] === 'dashboard',
     },
@@ -78,7 +78,7 @@ export const generateBreadcrumbs = (pathname, orgId) => {
     }
 
     const isLast = index === routeSegments.length - 1;
-    const segmentPath = `/them/dashboard/${routeSegments
+    const segmentPath = `/user/dashboard/${routeSegments
       .slice(0, index + 1)
       .join('/')}`;
 

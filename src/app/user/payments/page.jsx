@@ -142,8 +142,8 @@ export default function PaymentManagementPage() {
         <TourProvider steps={PAYMENT_MANAGEMENT_TOUR_STEPS} />
       )}
 
-      <div className="space-y-6">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      <div className="space-y-6 w-full">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 w-full">
           {/* Payment Plans */}
           <div className="lg:col-span-12 space-y-6">
             <div

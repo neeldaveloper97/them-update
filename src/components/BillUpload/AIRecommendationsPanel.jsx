@@ -68,7 +68,7 @@ export default function AIRecommendationsPanel({
 
           <Button className="bg-org-primary" asChild>
             <Link
-              href={`/them/dashboard/check-uploaded-bill/${bill?.id}`}
+              href={`/user/check-uploaded-bill/${bill?.id}`}
               aria-label="Open full bill view"
             >
               <ExternalLink className="w-4 h-4" />
