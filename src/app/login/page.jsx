@@ -9,7 +9,7 @@ import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@/components/ui/button';
 import { useDispatch, useSelector } from 'react-redux';
-import { login, selectAuth } from '@/store/slices/authSlice';
+import { login, selectAuth, selectDashboardRoute } from '@/store/slices/authSlice';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { toast } from 'sonner';
 
@@ -51,7 +51,7 @@ export default function LoginPage() {
 
     console.log('isAuthenticated:', isAuthenticated);
 
-    const { dashboardRoute } = useSelector(selectAuth) || { dashboardRoute: '/user/dashboard' };
+    const dashboardRoute = useSelector(selectDashboardRoute) || '/user/dashboard';
     console.log('isAuthenticated:', isAuthenticated);
 
     const {
@@ -66,7 +66,9 @@ export default function LoginPage() {
     });
 
     const handleAuthSuccess = useCallback(() => {
-        const target = searchParams.get('callbackUrl') || dashboardRoute;
+        const fallback = '/user/dashboard';
+        const cb = searchParams.get('callbackUrl');
+        const target = (typeof cb === 'string' && cb) || dashboardRoute || fallback;
         const redirectUrl = target.startsWith('http')
             ? target
             : `${window.location.origin}${target}`;
@@ -110,7 +112,7 @@ export default function LoginPage() {
 
     useEffect(() => {
         setSessionId(sessionStorage.getItem('sessionId'));
-        if (isAuthenticated) {
+        if (isAuthenticated && dashboardRoute) {
             router.replace(dashboardRoute);
         }
     }, [isAuthenticated, router, dashboardRoute]);

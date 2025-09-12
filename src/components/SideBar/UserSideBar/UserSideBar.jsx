@@ -29,22 +29,22 @@ const getNavItems = () => [
   },
   {
     title: 'Bill Upload & Analysis',
-    url: `/user/dashboard/bill-upload`,
+    url: `/user/bill-upload`,
     icon: <UploadCloud className="w-5 h-5" />,
   },
   {
     title: 'Bill Intake & Prep',
-    url: `/user/dashboard/bill-Intake-Prep`,
+    url: `/user/bill-Intake-Prep`,
     icon: <ClipboardList className="w-5 h-5" />,
   },
   {
     title: 'Reports & Analytics',
-    url: `/user/dashboard/reports`,
+    url: `/user/reports`,
     icon: <BarChart3 className="w-5 h-5" />,
   },
   {
     title: 'Payment Management',
-    url: `/user/dashboard/payments`,
+    url: `/user/payments`,
     icon: <CreditCard className="w-5 h-5" />,
   },
 ];

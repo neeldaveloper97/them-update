@@ -1,5 +1,4 @@
 import UplodIcon from '@/app/assets/uploadIcon.svg';
-import { X } from 'lucide-react';
 import Image from 'next/image';
 import { useRef, useState } from 'react';
 

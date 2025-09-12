@@ -190,7 +190,7 @@ const clearStorageData = () => {
 
 export const logoutUser = createAsyncThunk(
   'auth/logoutUser',
-  async (_, { rejectWithValue }) => {
+  async () => {
     try {
       const userId = sessionStorage.getItem(SESSION_KEYS.CHAT_USER_ID);
       const sessionId = sessionStorage.getItem(SESSION_KEYS.SESSION_ID);
