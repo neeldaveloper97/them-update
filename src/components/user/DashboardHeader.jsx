@@ -43,7 +43,7 @@ const DashboardHeader = ({ pageTitle }) => {
               asChild
             >
               <Link
-                href={`/dashboard/profile`}
+                href={`/user/profile`}
                 className="flex items-center gap-2"
               >
                 <Avatar className="w-8 h-8">

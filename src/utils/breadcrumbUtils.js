@@ -4,10 +4,15 @@ export const getBreadcrumbConfig = () => ({
   dashboard: 'Overview Panel',
   'bill-upload': 'Bill Upload & Analysis',
   'bill-Intake-Prep': 'Bill Intake & Prep',
+  'bill-upload-initiate-negotiation': 'Initiate Negotiation',
+  'check-uploaded-bill': 'Check Uploaded Bill',
+  'initiate-negotiation': 'Initiate Negotiation',
   reports: 'Reports & Analytics',
   payments: 'Payment Management',
   'billing-history': 'Billing History',
   profile: 'Profile',
+  plans: 'Plans',
+  support: 'Support',
 
   // Sub-routes for bill upload
   upload: 'Upload',
@@ -15,7 +20,6 @@ export const getBreadcrumbConfig = () => ({
   review: 'Review',
 
   // Sub-routes for negotiation tracker
-  'initiate-negotiation': 'Initiate Negotiation',
   'active-negotiations': 'Active Negotiations',
   'completed-negotiations': 'Completed Negotiations',
   'negotiation-history': 'Negotiation History',
@@ -45,14 +49,14 @@ export const getBreadcrumbConfig = () => ({
   settings: 'Settings',
 });
 
-export const generateBreadcrumbs = (pathname, orgId) => {
+export const generateBreadcrumbs = (pathname) => {
   const config = getBreadcrumbConfig();
   if (pathname.endsWith('/support')) {
     return [];
   }
   const pathSegments = pathname.split('/').filter(Boolean);
 
-  // Remove orgId from segments
+  // Remove orgId from segments if present
   const relevantSegments = pathSegments.slice(1); // Skip orgId
 
   // Always start with Dashboard
@@ -70,15 +74,15 @@ export const generateBreadcrumbs = (pathname, orgId) => {
     return breadcrumbs;
   }
 
-  // Process remaining segments (skip 'dashboard' segment)
-  const routeSegments = relevantSegments.slice(1);
-  routeSegments.forEach((segment, index) => {
+  // Process all segments (not skipping the first one)
+  relevantSegments.forEach((segment, index) => {
+    // Skip UUID-like segments
     if (/^[a-f0-9]{24}$/i.test(segment) || /^[a-f0-9-]{36}$/i.test(segment)) {
       return;
     }
 
-    const isLast = index === routeSegments.length - 1;
-    const segmentPath = `/user/dashboard/${routeSegments
+    const isLast = index === relevantSegments.length - 1;
+    const segmentPath = `/user/${relevantSegments
       .slice(0, index + 1)
       .join('/')}`;
 
